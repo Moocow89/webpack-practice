@@ -1,30 +1,22 @@
-var path = require('path');
-var webpack = require('webpack');
-
-const DEVELOPEMENT = process.env.NODE_ENV === 'developement';
-const PRODUCTION = process.env.NODE_ENV === 'production';
-
-var entry = PRODUCTION ? ['./src/index.js'] : ['./src/index.js',
-    'webpack/hot/dev-server',
-    'webpack-dev-server/client?http://localhost:8080'
-];
-
-var plugins = PRODUCTION ? [] : [new webpack.HotModuleReplacementPlugin()];
-
 module.exports = {
-    entry: entry,
-    plugins: plugins,
+    entry: ["./utils.js", "./app.js"],
+    output: {
+        filename: "bundle.js"
+    },
+    watch: true,
     module: {
-        loaders: [{
+        preloaders: [{
             test: /\.js$/,
-            loaders: ['babel-loader'],
-            exclude: '/node_modules/'
+            exclude: /node_modules/,
+            loader: "jshint-loader"
+        }]
+        loaders: [{
+            test: /\.es6$/,
+            exclude: /node_modules/,
+            loader: "babel-loader"
         }]
     },
-    output: {
-        path: path.join(__dirname, 'dist'),
-        publicPath: '/dist/',
-        filename: 'bundle.js'
-
+    resolve: {
+        extensions: ['.js', '.es6']
     }
 }
